@@ -8,6 +8,10 @@ class MoviesController < ApplicationController
   
   def index
     @movies = Movie.all
+    @ratings = @movies.return_ratings_unique_vals
+    
+    @ratings_checks = @ratings
+    
     if params[:sort] == 'title'
       @movies = @movies.order(:title)
       @sort_title = 'p-3 mb-2 bg-warning text-blue'
@@ -16,25 +20,12 @@ class MoviesController < ApplicationController
       @sort_date = 'p-3 mb-2 bg-warning text-blue'
     end
     
+    if params[:ratings]
+      @ratings_checks = params[:ratings].keys
+      @movies = Movie.where(rating: @ratings_checks)
+    end
+    
   end
-
-  # def index
-  #   @movies = Movie.all
-  #   @sort_title_flag = true
-  #   @sort_date_flag = true
-  # end
-  
-  # def sort_title
-  #   @movies = Movie.order(:title)
-  #   @sort_title_flag = false
-  #   @sort_date_flag = true
-  # end
-  
-  # def sort_rel_dates
-  #   @movies = Movie.order(:release_date)
-  #   @sort_title_flag = true
-  #   @sort_date_flag = false
-  # end
 
   def new
     # default: render 'new' template
